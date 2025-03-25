@@ -2,8 +2,7 @@
 #include <stdlib.h>
 #include "ordered_list.c"
 
-int main()
-{
+int main(int argc, char const *argv[]) {
     t_ordered_list *list_pair = create_ordered_list(5);
     t_ordered_list *list_odd = create_ordered_list(5);
     insert(list_pair, 10);

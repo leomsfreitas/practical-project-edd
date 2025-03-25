@@ -13,8 +13,7 @@ e o custo alto pra inserir ou remover elementos, porque precisa reorganizar tudo
 2. Eu optei por duplicar o espaço da memória sempre que ela enchesse, reduzindo a frequência de realocações e melhorando a eficiência.
 */
 
-t_ordered_list *create_ordered_list(int max)
-{
+t_ordered_list *create_ordered_list(int max) {
     t_ordered_list *t = (t_ordered_list *)malloc(sizeof(t_ordered_list));
     t->items = (int *)malloc(sizeof(int) * max);
     t->max = max;
@@ -22,49 +21,40 @@ t_ordered_list *create_ordered_list(int max)
     return t;
 }
 
-int size(t_ordered_list *ordered_list)
-{
+int size(t_ordered_list *ordered_list) {
     return ordered_list->n;
 }
 
-int is_empty(t_ordered_list *ordered_list)
-{
-    return ordered_list->n >= 1 ? 0 : 1;
+int is_empty(t_ordered_list *ordered_list) {
+    return ordered_list->n <= 0;
 }
 
-int is_full(t_ordered_list *ordered_list)
-{
-    return ordered_list->n >= ordered_list->max ? 1 : 0;
+int is_full(t_ordered_list *ordered_list) {
+    return ordered_list->n >= ordered_list->max;
 }
 
-void destroy(t_ordered_list *ordered_list)
-{
+void destroy(t_ordered_list *ordered_list) {
     free(ordered_list->items);
     free(ordered_list);
 }
 
-void clear(t_ordered_list *ordered_list)
-{
+void clear(t_ordered_list *ordered_list) {
     ordered_list->n = 0;
 }
 
-int insert(t_ordered_list *ordered_list, int value)
-{
+int insert(t_ordered_list *ordered_list, int value) {
     int temp;
-    if (is_full(ordered_list))
-    {
+    if (is_full(ordered_list)) {
         ordered_list->max = ordered_list->max * 2;
         ordered_list->items = (int *)realloc(ordered_list->items, ordered_list->max * sizeof(int));
     }
 
     int i;
-    for (i = 0; i < ordered_list->n; i++)
-    {
+    for (i = 0; i < ordered_list->n; i++) {
         if (*(ordered_list->items + i) >= value)
             break;
     }
-    for (int j = ordered_list->n; j > i; j--)
-    {
+    for (int j = ordered_list->n; j > i; j--) {
         *(ordered_list->items + j) = *(ordered_list->items + j - 1);
     }
 
@@ -73,40 +63,33 @@ int insert(t_ordered_list *ordered_list, int value)
     return 1;
 }
 
-int search(t_ordered_list *ordered_list, int value)
-{
-    for (int i = 0; i < ordered_list->n; i++)
-    {
+int search(t_ordered_list *ordered_list, int value) {
+    for (int i = 0; i < ordered_list->n; i++) {
         if (*(ordered_list->items + i) == value)
             return i;
     }
     return -1;
 }
 
-int remove_by_index(t_ordered_list *ordered_list, int index)
-{
+int remove_by_index(t_ordered_list *ordered_list, int index) {
     if (index + 1 > ordered_list->n && index < 0)
         return 0;
-    for (int i = index; i < ordered_list->n - 1; i++)
-    {
+    for (int i = index; i < ordered_list->n - 1; i++) {
         *(ordered_list->items + i) = *(ordered_list->items + i + 1);
     }
     ordered_list->n--;
     return 1;
 }
 
-int remove_by_value(t_ordered_list *ordered_list, int value)
-{
-    for (int i = 0; i < ordered_list->n; i++)
-    {
+int remove_by_value(t_ordered_list *ordered_list, int value) {
+    for (int i = 0; i < ordered_list->n; i++) {
         if (*(ordered_list->items + i) == value)
             return remove_by_index(ordered_list, i);
     }
     return 0;
 }
 
-int remove_end(t_ordered_list *ordered_list)
-{
+int remove_end(t_ordered_list *ordered_list) {
     if (is_empty(ordered_list))
         return 0;
 
@@ -114,28 +97,23 @@ int remove_end(t_ordered_list *ordered_list)
     return 1;
 }
 
-void print_ordered_list(t_ordered_list *ordered_list)
-{
-    for (int i = 0; i < ordered_list->n; i++)
-    {
+void print_ordered_list(t_ordered_list *ordered_list) {
+    for (int i = 0; i < ordered_list->n; i++) {
         printf("%d\t", *(ordered_list->items + i));
     }
     printf("\n");
 }
 
-t_ordered_list *merge(t_ordered_list *ordered_list_1, t_ordered_list *ordered_list_2)
-{
+t_ordered_list *merge(t_ordered_list *ordered_list_1, t_ordered_list *ordered_list_2) {
     int new_max = ordered_list_1->n + ordered_list_2->n;
     t_ordered_list *merge_list = create_ordered_list(new_max);
     merge_list->max = new_max;
 
-    for (int i = 0; i < ordered_list_1->n; i++)
-    {
+    for (int i = 0; i < ordered_list_1->n; i++) {
         insert(merge_list, *(ordered_list_1->items + i));
     }
 
-    for (int i = 0; i < ordered_list_2->n; i++)
-    {
+    for (int i = 0; i < ordered_list_2->n; i++) {
         insert(merge_list, *(ordered_list_2->items + i));
     }
     return merge_list;
